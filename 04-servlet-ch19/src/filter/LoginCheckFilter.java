@@ -27,6 +27,7 @@ public class LoginCheckFilter implements Filter {
 
 	@Override
 	public void doFilter(ServletRequest req, ServletResponse resp, FilterChain chain) throws IOException, ServletException {
+		System.out.println("로그인 체크 필터 들어감");
 		
 		// HttpServletRequest의 기능을 사용하기 위해 다운캐스팅 (getSession 메소드)
 		HttpServletRequest httpReq = (HttpServletRequest) req;

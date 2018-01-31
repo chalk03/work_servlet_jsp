@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" id="WebApp_ID" version="3.1">
- <servlet>
+  <servlet>
   	<servlet-name>loginForm</servlet-name>
-  	<servlet-class>example.LoginFormServlet</servlet-class>
+  	<servlet-class>filter.LoginFormServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -12,7 +12,7 @@
   
   <servlet>
   	<servlet-name>login</servlet-name>
-  	<servlet-class>example.LoginServlet</servlet-class>
+  	<servlet-class>filter.LoginServlet</servlet-class>
   </servlet>
   
   <servlet-mapping>
@@ -20,6 +20,23 @@
   	<url-pattern>/member/login.do</url-pattern>
   </servlet-mapping>
   
+  <!-- 필터는 순서가 있다. (CharacterEncodingFilter, loginCheckFilter 순으로 실행 -->
+  <filter>
+  	<filter-name>encodingFilter</filter-name>
+  	<filter-class>util.CharacterEncodingFilter</filter-class>
+  	<!-- 초기 key와 value을 설정 -->
+  	<init-param>
+  		<param-name>encoding</param-name>	<!-- key -->
+  		<param-value>utf-8</param-value>	<!-- value -->
+  	</init-param>
+  </filter>
+  
+  <filter-mapping>
+  	<filter-name>encodingFilter</filter-name>
+  	<url-pattern>/*</url-pattern>	<!-- 모든 페이지에 인코딩 설정을 적용 -->
+  </filter-mapping>
+  
+  <!-- p.559 -->
   <filter>
   	<filter-name>loginCheck</filter-name>
   	<filter-class>filter.LoginCheckFilter</filter-class>
@@ -27,6 +44,6 @@
   
   <filter-mapping>
   	<filter-name>loginCheck</filter-name>
-  	<url-pattern>/board/*</url-pattern> <!--  필터 동작 범위 -->
+  	<url-pattern>/board/*</url-pattern> <!-- 필터 동작 범위 -->
   </filter-mapping>
 </web-app>
