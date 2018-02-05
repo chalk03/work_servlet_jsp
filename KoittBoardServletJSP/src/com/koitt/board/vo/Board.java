@@ -3,19 +3,18 @@ package com.koitt.board.vo;
 import java.io.Serializable;
 import java.util.Date;
 
-// Java Bean, VO(VALUE Object), DTO(Data Transfer Object)
+// Java Bean, VO(Value Object), DTO(Data Transfer Object)
 public class Board implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
-	private Integer no; // 글번호
-	private String title; // 글 제목
-	private String content; // 글 내용
-	private String writer; // 글 작성자
-	private Date regdate; // 등록일
-
-	// 1. 기본 생성자
-	public Board() {
-	}
+	private Integer no;		// 글 번호
+	private String title;	// 글 제목
+	private String content;	// 글 내용
+	private String writer;	// 글 작성자
+	private Date regdate;	// 등록일
+	
+	// 1. 기본생성자
+	public Board() {}
 
 	// 2. 생성자 (모든 필드 초기화)
 	public Board(Integer no, String title, String content, String writer, Date regdate) {
@@ -66,9 +65,8 @@ public class Board implements Serializable {
 	public void setRegdate(Date regdate) {
 		this.regdate = regdate;
 	}
-	
-	
-	// 4. hashcode
+
+	// 3. hashCode
 	@Override
 	public int hashCode() {
 		final Integer prime = 31;
@@ -81,9 +79,10 @@ public class Board implements Serializable {
 		return result;
 	}
 
+	// 4. equals
 	@Override
 	public boolean equals(Object obj) {
-		// 4-1 주소비교
+		// 4-1. 주소 비교
 		if (this == obj) {
 			return true;
 		}
@@ -93,7 +92,7 @@ public class Board implements Serializable {
 			return false;
 		}
 		
-		// 4-3. 글번호 비교하기 위해 다운 캐스팅
+		// 4-3. 글번호 비교하기위해 다운캐스팅
 		Board other = (Board) obj;
 		if (this.no.equals(other.no)) {
 			return true;
