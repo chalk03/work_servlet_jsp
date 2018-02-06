@@ -11,12 +11,12 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.koitt.board.model.Command;
-import com.koitt.board.model.DeleteCommand;
-import com.koitt.board.model.InsertCommand;
-import com.koitt.board.model.ListCommand;
-import com.koitt.board.model.UpdateCommand;
-import com.koitt.board.model.UpdateFormCommand;
-import com.koitt.board.model.ViewCommand;
+import com.koitt.board.model.board.DeleteCommand;
+import com.koitt.board.model.board.InsertCommand;
+import com.koitt.board.model.board.ListCommand;
+import com.koitt.board.model.board.UpdateCommand;
+import com.koitt.board.model.board.UpdateFormCommand;
+import com.koitt.board.model.board.ViewCommand;
 
 public class BoardServlet extends HttpServlet {
 	
