@@ -9,6 +9,7 @@ import java.util.List;
 
 import com.koitt.board.util.DBUtil;
 import com.koitt.board.vo.Board;
+import com.koitt.board.vo.Users;
 
 public class BoardDao {
 	
@@ -17,10 +18,14 @@ public class BoardDao {
 		Connection conn = DBUtil.getInstance().getConnection();
 		
 		// 2. SQL문 작성 (글 번호 내림차순 정렬, 최신글 우선)
-		String sql = "SELECT * FROM board ORDER BY no DESC";
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT b.no, b.title, b.content, u.email, b.regdate");
+		sql.append("FROM board b, users u");
+		sql.append("WHERE b.user_no = u.no");
+		sql.append("ORDER BY b.no DESC");
 		
 		// 3. PreparedStatement 객체 생성
-		PreparedStatement pstmt = conn.prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		
 		// 4. SQL문 실행
 		ResultSet rs = pstmt.executeQuery();
@@ -29,12 +34,15 @@ public class BoardDao {
 		List<Board> list = new ArrayList<Board>();
 		while (rs.next()) {
 			Board board = new Board();
-			
 			board.setContent(rs.getString("content"));
 			board.setNo(rs.getInt("no"));
 			board.setRegdate(rs.getDate("regdate"));
 			board.setTitle(rs.getString("title"));
-			board.setWriter(rs.getString("writer"));
+			
+			Users users = new Users();
+			users.setEmail(rs.getString("email"));
+
+			board.setUsers(users);
 			
 			// 글 하나에 해당하는 Board 객체를 리스트에 저장
 			list.add(board);
@@ -54,10 +62,14 @@ public class BoardDao {
 		Connection conn = DBUtil.getInstance().getConnection();
 		
 		// 2. SQL문 작성 (글 번호 내림차순 정렬, 최신글 우선)
-		String sql = "SELECT * FROM board WHERE no = ?";
+		StringBuilder sql = new StringBuilder();
+		sql.append("SELECT b.no, b.title, b.content, u.email, b.regdate");
+		sql.append("FROM board b, users u");
+		sql.append("WHERE b.user_no = u.no AND b.no = ? ");
+		sql.append("ORDER BY b.no DESC");
 		
 		// 3. PreparedStatement 객체 생성 및 물음표 채우기
-		PreparedStatement pstmt = conn.prepareStatement(sql);
+		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		pstmt.setInt(1, no);
 		
 		// 4. SQL문 실행
@@ -74,7 +86,11 @@ public class BoardDao {
 		board.setNo(rs.getInt("no"));
 		board.setRegdate(rs.getDate("regdate"));
 		board.setTitle(rs.getString("title"));
-		board.setWriter(rs.getString("writer"));
+		
+		Users users = new Users();
+		users.setEmail(rs.getString("email"));
+
+		board.setUsers(users);
 		
 		// 6. 객체 해제
 		DBUtil.getInstance().close(rs);
@@ -87,19 +103,25 @@ public class BoardDao {
 	
 	// 글 작성
 	public void insert(Board board) throws ClassNotFoundException, SQLException {
+		/*
+		 * 0. 파라미터로 전달받은 board 객체에는 users 객체가 존재하고, 그 users 객체에는 현재 접속한 사용자의 email 정보가 저장되어 있다.
+		 * 	(InsertCommand에서 처리한다.)
+		 */
+		
+		
 		// 1. 데이터베이스 커넥션 객체 가져오기
 		Connection conn = DBUtil.getInstance().getConnection();
 		
 		// 2. SQL문 작성 (글 번호 내림차순 정렬, 최신글 우선)
 		StringBuilder sql = new StringBuilder();
-		sql.append("INSERT INTO board (title, content, writer, regdate) ");
+		sql.append("INSERT INTO board (title, content, user_no, regdate) ");
 		sql.append("VALUES (?, ?, ?, CURDATE())");	// CURDATE(): MySQL에서 제공하는 함수
 		
 		// 3. PreparedStatement 객체 생성 및 물음표 채우기
 		PreparedStatement pstmt = conn.prepareStatement(sql.toString());
 		pstmt.setString(1, board.getTitle());
 		pstmt.setString(2, board.getContent());
-		pstmt.setString(3, board.getWriter());
+		pstmt.setInt(3, board.getuserNo());
 		
 		// 4. SQL문 실행
 		pstmt.executeUpdate();
